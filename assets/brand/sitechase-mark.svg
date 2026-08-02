@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-labelledby="title desc">
+  <title id="title">SiteChase growth signal mark</title>
+  <desc id="desc">Three stacked website layers with a rising analytics line.</desc>
+  <defs>
+    <linearGradient id="blackLayer" x1="24" y1="116" x2="174" y2="186" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#23242B"/>
+      <stop offset="1" stop-color="#121217"/>
+    </linearGradient>
+    <linearGradient id="blueLayer" x1="28" y1="66" x2="174" y2="138" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0082F3"/>
+      <stop offset="1" stop-color="#2563EB"/>
+    </linearGradient>
+    <linearGradient id="redLayer" x1="28" y1="18" x2="172" y2="86" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF592C"/>
+      <stop offset="1" stop-color="#EA384C"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="145%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#121217" flood-opacity=".16"/>
+    </filter>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <path fill="url(#blackLayer)" d="M15 134.5 91.5 96.2a18.8 18.8 0 0 1 17 0l76.5 38.3c4 2 4 7.7 0 9.7l-76.5 38.3a18.8 18.8 0 0 1-17 0L15 144.2c-4-2-4-7.7 0-9.7Z"/>
+    <path fill="url(#blueLayer)" stroke="#FFFDF8" stroke-width="5" stroke-linejoin="round" d="M14.5 90.2 91.1 51.9a19.8 19.8 0 0 1 17.8 0l76.6 38.3c4.3 2.2 4.3 8.4 0 10.6l-70.8 35.4c-9.2 4.6-20.2 4.6-29.4 0l-70.8-35.4c-4.3-2.2-4.3-8.4 0-10.6Z"/>
+    <path fill="url(#redLayer)" stroke="#FFFDF8" stroke-width="5" stroke-linejoin="round" d="M14.5 47.8 91.1 9.5a19.8 19.8 0 0 1 17.8 0l76.6 38.3c4.3 2.2 4.3 8.4 0 10.6l-76.6 38.3a19.8 19.8 0 0 1-17.8 0L14.5 58.4c-4.3-2.2-4.3-8.4 0-10.6Z"/>
+  </g>
+
+  <path d="M55 154 82 127 116 89 150 55 181 22" fill="none" stroke="#FFFDF8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="#FFFDF8">
+    <circle cx="55" cy="154" r="9"/>
+    <circle cx="82" cy="127" r="9"/>
+    <circle cx="116" cy="89" r="9"/>
+    <circle cx="150" cy="55" r="9"/>
+  </g>
+  <circle cx="181" cy="22" r="12" fill="#F0442E"/>
+</svg>
