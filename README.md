@@ -29,4 +29,16 @@ rg 'noindex,nofollow,noarchive,nosnippet,noimageindex' index.html
 
 ## Verdict
 
-Pending iteration-two public browser checks.
+**PARTIAL.** The interaction approach is validated. The public GitHub Pages
+build returned 200 for the document and sampled assets and produced no browser
+console errors. At 1440×900 the second section stayed pinned, image and route
+values interpolated continuously across seven sampled scroll positions, copy
+cleared between statements rather than overlapping, and the page had no
+horizontal overflow. At 390×844 the same enhancement remained active; the copy
+panel stayed inside the viewport above the progress rail, the header CTA measured
+44px high, and no horizontal overflow was detected. Reduced-motion rendering
+kept the enhancement off, and the raw no-JS document retained all four scenes.
+
+What remains unvalidated is the human outcome: whether this version feels more
+coherent and improves prospect comprehension or conversion. That requires Tom's
+review or a controlled user test.
