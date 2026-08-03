@@ -1,39 +1,85 @@
 (() => {
+  const story = document.querySelector("[data-motion-story]");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (!story || reducedMotion.matches) return;
+
   const root = document.documentElement;
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-  const hasRoom = window.matchMedia("(min-width: 961px)");
-  const steps = [...document.querySelectorAll(".story-step")];
-  const images = [...document.querySelectorAll(".stage-image")];
-  const nodes = [...document.querySelectorAll(".route-node")];
-  const counter = document.querySelector(".stage-counter b");
-  const progress = document.querySelector(".stage-progress span");
+  const images = [...story.querySelectorAll("[data-motion-image]")];
+  const copies = [...story.querySelectorAll("[data-motion-copy]")];
+  const railItems = [...story.querySelectorAll(".motion-rail li")];
+  const railFill = story.querySelector(".motion-rail__track i");
+  const count = story.querySelector(".motion-count strong");
+  const cue = story.querySelector(".motion-cue");
+  const paths = [...story.querySelectorAll(".signal-path")];
+  const sceneCount = Math.min(images.length, copies.length);
 
-  if (!("IntersectionObserver" in window) || prefersReducedMotion.matches || !hasRoom.matches || !steps.length) {
-    return;
-  }
+  if (!sceneCount) return;
 
-  root.classList.add("is-enhanced");
-  steps[0].classList.add("is-active");
-
-  const activate = (index) => {
-    steps.forEach((step, itemIndex) => step.classList.toggle("is-active", itemIndex === index));
-    images.forEach((image, itemIndex) => image.classList.toggle("is-active", itemIndex === index));
-    nodes.forEach((node, itemIndex) => node.classList.toggle("is-active", itemIndex === index));
-
-    if (counter) counter.textContent = String(index + 1).padStart(2, "0");
-    if (progress) progress.style.width = `${((index + 1) / steps.length) * 100}%`;
+  const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+  const smoothstep = (value) => {
+    const x = clamp(value);
+    return x * x * (3 - (2 * x));
   };
 
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries
-      .filter((entry) => entry.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+  root.classList.add("is-motion-ready");
 
-    if (visible) activate(Number(visible.target.dataset.phase));
-  }, {
-    rootMargin: "-28% 0px -42% 0px",
-    threshold: [0.05, 0.25, 0.5, 0.75]
-  });
+  let frameRequested = false;
 
-  steps.forEach((step) => observer.observe(step));
+  const render = () => {
+    frameRequested = false;
+
+    const rect = story.getBoundingClientRect();
+    const scrollRange = Math.max(1, rect.height - window.innerHeight);
+    const progress = clamp(-rect.top / scrollRange);
+    const phase = progress * (sceneCount - 1);
+    const activeIndex = Math.round(phase);
+
+    images.forEach((image, index) => {
+      const distance = Math.abs(phase - index);
+      const opacity = distance >= 1 ? 0 : 1 - smoothstep(distance);
+      const driftX = ((index - phase) * 1.1) - (progress * 1.4);
+      const driftY = ((progress - 0.5) * -1.8) + ((index % 2) * 0.8);
+      const scale = 1.055 + (distance * 0.018) + (progress * 0.012);
+
+      image.style.opacity = opacity.toFixed(4);
+      image.style.transform = `translate3d(${driftX.toFixed(2)}%, ${driftY.toFixed(2)}%, 0) scale(${scale.toFixed(4)})`;
+    });
+
+    copies.forEach((copy, index) => {
+      const distance = Math.abs(phase - index);
+      const opacity = distance >= 1 ? 0 : 1 - smoothstep(distance);
+      const translateY = (index - phase) * 32;
+
+      copy.style.opacity = opacity.toFixed(4);
+      copy.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0)`;
+    });
+
+    railItems.forEach((item, index) => {
+      item.classList.toggle("is-active", index === activeIndex);
+      item.classList.toggle("is-passed", index < activeIndex);
+    });
+
+    if (railFill) railFill.style.width = `${(progress * 100).toFixed(2)}%`;
+    if (count) count.textContent = String(activeIndex + 1).padStart(2, "0");
+    if (cue) cue.style.opacity = clamp(1 - (progress * 9)).toFixed(3);
+
+    paths.forEach((path, index) => {
+      const routeProgress = clamp((progress * 1.12) - (index * 0.07));
+      path.style.strokeDashoffset = String(100 - (routeProgress * 100));
+    });
+  };
+
+  const requestRender = () => {
+    if (frameRequested) return;
+    frameRequested = true;
+    window.requestAnimationFrame(render);
+  };
+
+  window.addEventListener("scroll", requestRender, { passive: true });
+  window.addEventListener("resize", requestRender, { passive: true });
+  window.addEventListener("orientationchange", requestRender, { passive: true });
+  window.addEventListener("pageshow", requestRender, { passive: true });
+
+  requestRender();
 })();
