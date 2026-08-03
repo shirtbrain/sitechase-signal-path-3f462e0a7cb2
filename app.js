@@ -48,8 +48,11 @@
 
     copies.forEach((copy, index) => {
       const distance = Math.abs(phase - index);
-      const opacity = distance >= 1 ? 0 : 1 - smoothstep(distance);
-      const translateY = (index - phase) * 32;
+      const copyWindow = 0.5;
+      const opacity = distance >= copyWindow
+        ? 0
+        : 1 - smoothstep(distance / copyWindow);
+      const translateY = (index - phase) * 54;
 
       copy.style.opacity = opacity.toFixed(4);
       copy.style.transform = `translate3d(0, ${translateY.toFixed(2)}px, 0)`;
